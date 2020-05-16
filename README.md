@@ -21,3 +21,5 @@ ascii_fire - creates a fire in the terminal using curses module, urwid also reco
 bitcalc - caculates the maximum number of binary bits a decimal number with a given number of digets will require in memory
 
 rpass - generates a random secure password of >=4 characters
+
+sencrypt - an inplementation of one time pad encryption for ASCII input
