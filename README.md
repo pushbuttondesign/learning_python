@@ -17,3 +17,5 @@ typehelper - example of the python typeing module
 progressbar - a text only progress bar for output in the terminal
 
 ascii_fire - creates a fire in the terminal using curses module, urwid also recomended
+
+bitcalc - caculates the maximum number of binary bits a decimal number with a given number of digets will require in memory
