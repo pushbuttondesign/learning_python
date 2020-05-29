@@ -51,9 +51,6 @@ def encrypt(argv):
     with open(argv[2],'rb') as fp:
         bcontent = fp.read();
 
-    with open('before.txt', 'w') as a:
-        a.write(str([x for x in bcontent]));
-
     #create password
     password = secrets.randbits(len(bcontent) * 8); # * 8 converts bytes to bits
     bpass = bytearray();
@@ -109,9 +106,6 @@ def decrypt(argv):
                     inc = d - bpass[i];
                 bencrypt.append(inc);
             dp.write(bencrypt);
-
-        with open('after.txt', 'w') as a:
-            a.write(str([x for x in bencrypt]));
 
         return;
 
