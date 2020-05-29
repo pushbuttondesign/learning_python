@@ -49,54 +49,69 @@ def main(argv):
 def encrypt(argv):
     #open file
     with open(argv[2],'rb') as fp:
-        bstr = fp.read();
-        bcontent = bytearray(bstr);
+        bcontent = fp.read();
 
-        #create password
-        password = secrets.randbits(len(bstr) * 8); # * 8 converts bytes to bits
-        bpass = bytearray();
-        for d in [int(d) for d in str(password)]:
-            bpass.append(d);
+    with open('before.txt', 'w') as a:
+        a.write(str([x for x in bcontent]));
 
-        #get filename
-        for i in reversed(range(len(argv[2]))):
-            if argv[2][i] == '.':
-                break;
+    #create password
+    password = secrets.randbits(len(bcontent) * 8); # * 8 converts bytes to bits
+    bpass = bytearray();
+    for d in [int(d) for d in str(password)]:
+        bpass.append(d);
 
-        #save password
-        with open(argv[2][:i] + "_otp" + argv[2][i:], 'wb') as pp:
-            pp.write(bpass);
+    #get filename
+    for i in reversed(range(len(argv[2]))):
+        if argv[2][i] == '.':
+            break;
 
-        #encrypt file
-        with open(argv[2][:i] + "_otp_encrypted" + argv[2][i:], 'wb') as ep:
-            bencrypt = bytearray();
-            for i, d in enumerate(bcontent):
-                bencrypt.append(d + bpass[i]);
-            ep.write(bencrypt);
+    #save password
+    with open(argv[2][:i] + "_otp_password" + argv[2][i:], 'wb') as pp:
+        pp.write(bpass);
+
+    #encrypt file
+    with open(argv[2][:i] + "_otp_encrypted" + argv[2][i:], 'wb') as ep:
+        bencrypt = bytearray();
+        for i, d in enumerate(bcontent):
+            #wrap at 255
+            if d + bpass[i] > 255:
+                wrap = d + bpass[i] - 255 - 1;
+                inc = wrap;
+            else:
+                inc = d + bpass[i];
+            bencrypt.append(inc);
+        ep.write(bencrypt);
 
     return;
 
 def decrypt(argv):
         #open file
         with open(argv[2],'rb') as fp:
-            bstr = fp.read();
-            bcontent = bytearray(bstr);
+            bcontent = fp.read();
 
-            #open password
-            with open(argv[3], 'rb') as pp:
-                bstr = pp.read();
-                bpass = bytearray(bstr);
+        #open password
+        with open(argv[3], 'rb') as pp:
+            bpass = pp.read();
 
-            for i in reversed(range(len(argv[2]))):
-                if argv[2][i] == '.':
-                    break;
+        for i in reversed(range(len(argv[2]))):
+            if argv[2][i] == '.':
+                break;
 
-            #decrypt file
-            with open(argv[2][:i] + "_otp_decrypted" + argv[2][i:], 'wb') as dp:
-                bencrypt = bytearray();
-                for i, d in enumerate(bcontent):
-                    bencrypt.append(d - bpass[i]);
-                dp.write(bencrypt);
+        #decrypt file
+        with open(argv[2][:i] + "_otp_decrypted" + argv[2][i:], 'wb') as dp:
+            bencrypt = bytearray();
+            for i, d in enumerate(bcontent):
+                #wrap
+                if d - bpass[i] < 0:
+                    wrap = 255 + d - bpass[i] + 1;
+                    inc = wrap;
+                else:
+                    inc = d - bpass[i];
+                bencrypt.append(inc);
+            dp.write(bencrypt);
+
+        with open('after.txt', 'w') as a:
+            a.write(str([x for x in bencrypt]));
 
         return;
 
