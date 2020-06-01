@@ -25,5 +25,3 @@ rpass - generates a random secure password of >=4 characters in c
 sencrypt - inplementation of one time pad encryption for ASCII input in c
 
 otp_encryption - one time pad encryption of for any file in python
-
-descriptive_statistics - caculation of descriptive statistics on example data and plotting graphs
